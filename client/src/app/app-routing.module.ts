@@ -5,13 +5,21 @@ import { ListsComponent } from './lists/lists.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
+import { AuthGuard } from './_guards/auth.guard';
 
 const routes: Routes = [
   {path: '', component: HomeComponent}, //when user browse in 4002 the component will be loaded is the HomeComponent
-  {path: 'members', component: MemberListComponent},
-  {path: 'members/:id', component: MemberDetailComponent},
-  {path: 'lists', component: ListsComponent},
-  {path: 'messages', component: MessagesComponent},
+  {
+    path:'',
+    runGuardsAndResolvers:'always',
+    canActivate: [AuthGuard],
+    children:[
+      {path: 'members', component: MemberListComponent, canActivate:[AuthGuard]},
+      {path: 'members/:id', component: MemberDetailComponent},
+      {path: 'lists', component: ListsComponent},
+      {path: 'messages', component: MessagesComponent},
+    ]
+  },
   {path: '**', component: HomeComponent,pathMatch: 'full'}, //wild card roots user type something that is not match above it will be directed to HomeComponent
 ];
 
